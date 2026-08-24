@@ -1,0 +1,235 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>IT Open House - Registration</title>
+    
+    <!-- Reveal.js CSS -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/reveal.js/4.3.1/reveal.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/reveal.js/4.3.1/theme/white.min.css">
+    
+    <!-- Google Fonts & FontAwesome -->
+    <link href="https://fonts.googleapis.com/css2?family=Kanit:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <style>
+        body { margin: 0; padding: 0; font-family: 'Kanit', sans-serif; background-color: #f8f9fa; }
+        .reveal { font-family: 'Kanit', sans-serif; }
+        .reveal h1, .reveal h2 { font-family: 'Kanit', sans-serif; text-transform: none; font-weight: 700; color: #2C3E50; }
+        
+        .slide-content { width: 100%; max-width: 1000px; margin: 0 auto; }
+
+        .custom-form {
+            text-align: left; font-size: 20px; background: #ffffff;
+            padding: 25px 40px; border-radius: 20px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.08); border-top: 5px solid #3498db;
+        }
+        .form-grid {
+            display: grid; grid-template-columns: 1fr 1fr; gap: 15px 25px; margin-bottom: 20px;
+        }
+        .form-group { display: flex; flex-direction: column; }
+        .form-group label { font-size: 18px; font-weight: 600; margin-bottom: 5px; color: #34495e; }
+        .form-group input, .form-group select {
+            padding: 10px 15px; font-size: 18px; font-family: 'Kanit', sans-serif;
+            border: 2px solid #e9ecef; border-radius: 10px;
+            transition: border-color 0.3s; outline: none; background-color: #f8f9fa;
+        }
+        .form-group input:focus, .form-group select:focus {
+            border-color: #3498db; background-color: #fff;
+        }
+        .form-group.full { grid-column: 1 / -1; }
+        
+        .btn-group { display: flex; gap: 15px; margin-top: 10px; }
+        button.submit-btn, a.dashboard-btn {
+            width: 100%; padding: 15px; font-size: 22px; font-family: 'Kanit', sans-serif; font-weight: bold;
+            color: white; border: none; border-radius: 10px; cursor: pointer;
+            transition: all 0.3s; text-align: center; text-decoration: none;
+        }
+        button.submit-btn { background: linear-gradient(135deg, #3498db, #2980b9); box-shadow: 0 5px 15px rgba(52, 152, 219, 0.4); }
+        button.submit-btn:hover { transform: translateY(-3px); box-shadow: 0 8px 20px rgba(52, 152, 219, 0.6); }
+        button.submit-btn:disabled { background: #95a5a6; cursor: not-allowed; transform: none; box-shadow: none; }
+        
+        a.dashboard-btn { background: #95a5a6; box-shadow: 0 5px 15px rgba(149, 165, 166, 0.4); }
+        a.dashboard-btn:hover { transform: translateY(-3px); background: #7f8c8d; }
+
+        #toast {
+            position: fixed; top: 20px; right: -300px; background-color: #2ecc71; color: white;
+            padding: 15px 25px; border-radius: 8px; font-size: 18px; font-weight: 500;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.15); transition: right 0.4s ease; z-index: 9999;
+            display: flex; align-items: center; gap: 10px;
+        }
+        #toast.show { right: 20px; }
+        #toast.error { background-color: #e74c3c; }
+    </style>
+</head>
+<body>
+
+    <div id="toast"><i class="fa-solid fa-circle-check"></i> <span id="toast-msg">บันทึกข้อมูลสำเร็จ</span></div>
+
+    <div class="reveal">
+        <div class="slides">
+            
+            <!-- Slide 1: Cover -->
+            <section data-transition="zoom">
+                <div class="slide-content">
+                    <i class="fa-solid fa-laptop-code" style="font-size: 120px; color: #3498db; margin-bottom: 30px;"></i>
+                    <h1 style="font-size: 3.5em; margin-bottom: 10px;">IT Open House</h1>
+                    <h3 style="color: #7f8c8d; font-weight: 400;">ระบบลงทะเบียนและแสดงผลข้อมูล</h3>
+                    <div style="margin-top: 60px; padding: 15px 30px; background: #eef2f5; border-radius: 50px; display: inline-block;">
+                        <p style="margin: 0; color: #2c3e50; font-size: 24px; font-weight: 500;">
+                            กดปุ่ม <i class="fa-solid fa-arrow-right-long fa-bounce" style="color: #e74c3c; margin: 0 10px;"></i> เพื่อเริ่มลงทะเบียน
+                        </p>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Slide 2: Form -->
+            <section data-transition="slide">
+                <div class="slide-content">
+                    <h2 style="margin-bottom: 25px;"><i class="fa-solid fa-address-card" style="color: #3498db;"></i> ลงทะเบียนเข้าร่วมงาน</h2>
+                    <form id="openHouseForm" class="custom-form">
+                        <div class="form-grid">
+                            <div class="form-group">
+                                <label>คำนำหน้า</label>
+                                <select id="prefix" required><option value="">-- เลือก --</option><option value="นาย">นาย</option><option value="นางสาว">นางสาว</option></select>
+                            </div>
+                            <div class="form-group">
+                                <label>ชื่อ-นามสกุล</label>
+                                <input type="text" id="fullName" placeholder="เช่น สมชาย ใจดี" required>
+                            </div>
+                            <div class="form-group">
+                                <label>เพศ</label>
+                                <select id="gender" required><option value="">-- เลือก --</option><option value="ชาย">ชาย</option><option value="หญิง">หญิง</option><option value="อื่นๆ">อื่นๆ</option></select>
+                            </div>
+                            <div class="form-group">
+                                <label>อายุ</label>
+                                <input type="number" id="age" min="10" max="99" placeholder="เช่น 17" required>
+                            </div>
+                            <div class="form-group">
+                                <label>ระดับชั้น</label>
+                                <select id="grade" required><option value="">-- เลือก --</option><option value="ม.4">ม.4</option><option value="ม.5">ม.5</option><option value="ม.6">ม.6</option><option value="ปวช.">ปวช.</option><option value="อื่นๆ">อื่นๆ</option></select>
+                            </div>
+                            <div class="form-group">
+                                <label>ชื่อโรงเรียน</label>
+                                <input type="text" id="school" placeholder="ระบุชื่อโรงเรียน" required>
+                            </div>
+                            <div class="form-group">
+                                <label>เบอร์โทรศัพท์</label>
+                                <input type="tel" id="phone" placeholder="เช่น 0812345678" required>
+                            </div>
+                            <div class="form-group">
+                                <label>Line ID (ไม่บังคับ)</label>
+                                <input type="text" id="lineId" placeholder="ระบุ Line ID">
+                            </div>
+                            <div class="form-group full">
+                                <label>สาขาวิชาที่สนใจของคณะไอที</label>
+                                <select id="major" required>
+                                    <option value="">-- เลือกระบุสาขาวิชาที่ท่านสนใจ --</option>
+                                    <option value="เทคโนโลยีธุรกิจดิจิทัล">เทคโนโลยีธุรกิจดิจิทัล</option>
+                                    <option value="เทคโนโลยีสารสนเทศและนวัตกรรมดิจิทัล">เทคโนโลยีสารสนเทศและนวัตกรรมดิจิทัล</option>
+                                    <option value="ดิจิทัลมีเดียอาร์ต">ดิจิทัลมีเดียอาร์ต</option>
+                                    <option value="วิศวกรรมความปลอดภัย">วิศวกรรมความปลอดภัย</option>
+                                    <option value="ไม่สนใจ">ไม่สนใจ</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="btn-group">
+                            <button type="submit" class="submit-btn" id="submitBtn">
+                                <i class="fa-solid fa-paper-plane"></i> บันทึกข้อมูล
+                            </button>
+                            <a href="dashboard.html" class="dashboard-btn" target="_blank">
+                                <i class="fa-solid fa-chart-line"></i> ดู Dashboard
+                            </a>
+                        </div>
+                    </form>
+                </div>
+            </section>
+
+        </div>
+    </div>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/reveal.js/4.3.1/reveal.min.js"></script>
+    <script>
+        // เริ่มต้น Reveal.js
+        Reveal.initialize({
+            controls: true, progress: true, center: true, hash: false, 
+            transition: 'slide', width: 1200, height: 800, margin: 0.1
+        });
+
+        // ฟังก์ชันแจ้งเตือน
+        function showNotification(message, type = 'success') {
+            const toast = document.getElementById('toast');
+            const msg = document.getElementById('toast-msg');
+            msg.innerText = message;
+            toast.className = type === 'error' ? 'error show' : 'show';
+            toast.innerHTML = type === 'error' 
+                ? `<i class="fa-solid fa-circle-exclamation"></i> <span>${message}</span>`
+                : `<i class="fa-solid fa-circle-check"></i> <span>${message}</span>`;
+            setTimeout(() => toast.classList.remove('show'), 3000);
+        }
+
+        document.getElementById('openHouseForm').addEventListener('submit', function(e) {
+            e.preventDefault(); 
+            const submitBtn = document.getElementById('submitBtn');
+            submitBtn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> กำลังบันทึก...';
+            submitBtn.disabled = true;
+
+            const formData = {
+                prefix: document.getElementById('prefix').value,
+                fullName: document.getElementById('fullName').value,
+                gender: document.getElementById('gender').value,
+                age: document.getElementById('age').value,
+                grade: document.getElementById('grade').value,
+                school: document.getElementById('school').value,
+                phone: document.getElementById('phone').value,
+                lineId: document.getElementById('lineId').value,
+                major: document.getElementById('major').value
+            };
+
+            // URL ไปยัง Google Sheets
+            const SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbxVG32wNH7rMr0dR3aLAW1X9SwMkqpg9AbCJRKVIne6Z6ZpdyQ0w3LLXCEHNMH5Ln51pA/exec'; 
+
+            fetch(SCRIPT_URL, {
+                method: 'POST',
+                body: JSON.stringify(formData),
+                mode: 'no-cors', 
+                headers: { 'Content-Type': 'application/json' } 
+            })
+            .then(() => {
+                // อัปเดตข้อมูลสถิติลงใน LocalStorage (เพื่อให้ไฟล์ Dashboard ดึงไปใช้)
+                let savedData = JSON.parse(localStorage.getItem('openHouseStats'));
+                if(!savedData) {
+                    savedData = {
+                        'เทคโนโลยีธุรกิจดิจิทัล': 0, 'เทคโนโลยีสารสนเทศและนวัตกรรมดิจิทัล': 0, 
+                        'ดิจิทัลมีเดียอาร์ต': 0, 'วิศวกรรมความปลอดภัย': 0, 'ไม่สนใจ': 0
+                    };
+                }
+                
+                if(formData.major && savedData[formData.major] !== undefined) {
+                    savedData[formData.major]++;
+                    localStorage.setItem('openHouseStats', JSON.stringify(savedData));
+                    
+                    // กระตุ้นให้เกิด Event เผื่อเปิด Dashboard ไว้อีกแท็บ
+                    window.dispatchEvent(new Event('storage'));
+                }
+                
+                showNotification('บันทึกข้อมูลสำเร็จ!');
+                document.getElementById('openHouseForm').reset();
+                
+                // พาไปหน้า Dashboard หลังจาก 1.5 วินาที
+                setTimeout(() => {
+                    window.location.href = 'dashboard.html';
+                }, 1500);
+            })
+            .catch(error => {
+                showNotification('ไม่สามารถเชื่อมต่อได้', 'error');
+            })
+            .finally(() => {
+                submitBtn.innerHTML = '<i class="fa-solid fa-paper-plane"></i> บันทึกข้อมูล';
+                submitBtn.disabled = false;
+            });
+        });
+    </script>
+</body>
+</html>
